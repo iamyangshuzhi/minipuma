@@ -93,7 +93,7 @@ border-radius:999px;padding:2px 9px;white-space:nowrap;flex-shrink:0;}
 .drug .dnt{font-size:11.5px;color:var(--mut);margin-top:5px;}
 .drug.safe{border-left:5px solid var(--safe);}
 .drug.caution{border-left:5px solid var(--cau);}
-.drug.high{border-left:5px solid var(--hi);background:color-mix(in srgb,var(--hi) 4%,var(--card));}
+.drug.high{border-left:5px solid var(--hi);}
 .drug.na{border-left:5px solid var(--mut);}
 .risk-tag{font-size:10.5px;font-weight:600;border-radius:6px;padding:1.5px 7px;letter-spacing:.02em;display:inline-flex;align-items:center;gap:2px;}
 .risk-tag.safe{background:color-mix(in srgb,var(--safe) 14%,transparent);color:var(--safe);}
@@ -137,18 +137,22 @@ border-radius:14px;padding:13px 15px;color:var(--hi);font-weight:600;font-size:1
 .ctile .csrc{font-size:11.5px;color:var(--mut);}
 .ctile .csrc b{color:var(--g1);font-weight:500;}
 .ctile{position:relative;}
-.ctile.sev-high{border-left:4px solid var(--hi);background:linear-gradient(to right,color-mix(in srgb,var(--hi) 6%,transparent),var(--card) 25%);}
-.ctile.sev-med{border-left:4px solid var(--cau);background:linear-gradient(to right,color-mix(in srgb,var(--cau) 5%,transparent),var(--card) 30%);}
+.ctile.sev-high{border-left:4px solid var(--hi);}
+.ctile.sev-med{border-left:4px solid var(--cau);}
 .ctile.sev-low{border-left:3px solid color-mix(in srgb,var(--cau) 50%,transparent);}
 .ctile .em-mark{color:var(--hi);font-size:11.5px;font-weight:600;}
 .tile{position:relative;}
-.tile.sev-high{border-left:4px solid var(--hi);background:linear-gradient(to right,color-mix(in srgb,var(--hi) 6%,transparent),var(--card) 30%);}
-.tile.sev-med{border-left:4px solid var(--cau);background:linear-gradient(to right,color-mix(in srgb,var(--cau) 5%,transparent),var(--card) 30%);}
+.tile.sev-high{border-left:4px solid var(--hi);}
+.tile.sev-med{border-left:4px solid var(--cau);}
 .tile.sev-low{border-left:3px solid color-mix(in srgb,var(--cau) 50%,transparent);}
 .cz.sev-high{border-left:4px solid var(--hi);}
 .cz.sev-med{border-left:4px solid var(--cau);}
 .cz .em-tag.warn{color:var(--cau);}
-.csym.em-csym{border-left:4px solid var(--hi);position:relative;background:linear-gradient(to right,color-mix(in srgb,var(--hi) 6%,transparent),var(--card) 30%);}
+.csym.em-csym{border-left:4px solid var(--hi);position:relative;}
+.cgrp-hd{font-size:14px;font-weight:600;color:var(--ink);letter-spacing:0;margin:18px 2px 8px;padding-left:10px;border-left:3px solid transparent;}
+.cgrp.sev-high>.cgrp-hd{border-left-color:var(--hi);}
+.cgrp.sev-med>.cgrp-hd{border-left-color:var(--cau);}
+.cgrp-zh{font-size:11.5px;font-weight:400;color:var(--mut);margin-left:6px;letter-spacing:0.05em;}
 .em-bar{display:none;}
 .exams-block{display:flex;flex-direction:column;gap:8px;margin-top:6px;}
 .exam-row{display:flex;align-items:flex-start;gap:10px;padding:10px 14px;border-radius:12px;border:1px solid var(--line);font-size:13px;line-height:1.55;}
@@ -479,15 +483,16 @@ function renderHomeResults(){
      function tileHTML(a){var criCnt=0,emCnt=0;(a.c||[]).forEach(function(g){var c=CAUSE_INDEX[g];if(!c)return;if(c.hx==='急症')criCnt++;else if(c.em)emCnt++;});var sev='';if(criCnt>=2||/急症/.test(a.n))sev='sev-high';else if(criCnt>=1||emCnt>=3)sev='sev-med';else if(emCnt>=1)sev='sev-low';var rc=(a.c||[]).length;return '<button type="button" class="tile '+sev+'" onclick="APP.openAtomic(\''+a.id+'\')"><span class="em">'+a.e+'</span><span class="nm">'+esc(a.n)+'</span>'+(rc>0?'<span class="refcnt">'+rc+'</span>':'')+'</button>';}
      var sortBar='<div class="sort-bar"><span class="sort-lbl">排序：</span><button type="button" class="sort-btn'+(sortMode==='count'?' on':'')+'" onclick="APP.setSymSort(\'count\')">📊 按引用次数</button><button type="button" class="sort-btn'+(sortMode==='cat'?' on':'')+'" onclick="APP.setSymSort(\'cat\')">📂 按分类分组</button></div>';
      var singleAtoms=ATOMIC_SYMS.filter(function(a){return a.cat.indexOf('⭐组合')!==0;});
+     var CAT_EN={'📋 体征':'Constitution','🐈 品种':'Breed','🥫 误食':'Ingestion','🧠 精神':'Mental','眼':'Eye','上呼吸道':'Upper Respiratory','下呼吸道':'Lower Respiratory','消化-呕':'Vomiting (Digestive)','消化-便':'Stool (Digestive)','食欲/体重':'Appetite & Weight','排尿':'Urination','皮肤':'Skin','软组织':'Soft Tissue','心血管':'Cardiovascular','关节':'Joint','神经':'Neurological','全身':'Systemic','黄疸':'Jaundice','腹/积液':'Abdominal & Effusion','寄生虫':'Parasites','繁殖':'Reproductive','新生儿':'Neonatal','耳':'Ear','口腔':'Oral'};
      if(sortMode==='count'){
        var sorted=singleAtoms.slice().sort(function(a,b){return (b.c||[]).length-(a.c||[]).length;});
        resEl.innerHTML=sortBar+'<div class="grid grid-flat">'+sorted.map(tileHTML).join('')+'</div>';
      }else{
        var byCat={},catOrder=[];singleAtoms.forEach(function(a){if(!byCat[a.cat]){byCat[a.cat]=[];catOrder.push(a.cat);}byCat[a.cat].push(a);});
-       var catScore={};catOrder.forEach(function(cat){var sum=0;byCat[cat].forEach(function(a){sum+=(a.c||[]).length;});catScore[cat]=sum;byCat[cat].sort(function(a,b){return (b.c||[]).length-(a.c||[]).length;});});
-       var priCat=['📋 体征','🐈 品种','🥫 误食','🧠 精神'];
-       catOrder.sort(function(a,b){var ai=priCat.indexOf(a);var bi=priCat.indexOf(b);if(ai>=0&&bi<0)return -1;if(ai<0&&bi>=0)return 1;if(ai>=0&&bi>=0)return ai-bi;return catScore[b]-catScore[a];});
-       resEl.innerHTML=sortBar+catOrder.map(function(cat){return '<div class="cgrp"><h4>'+esc(cat)+'<span style="font-weight:400;color:var(--mut);margin-left:6px;font-size:12px">('+byCat[cat].length+')</span></h4><div class="grid">'+byCat[cat].map(tileHTML).join('')+'</div></div>';}).join('');
+       Object.keys(byCat).forEach(function(cat){byCat[cat].sort(function(a,b){return (b.c||[]).length-(a.c||[]).length;});});
+       catOrder.sort(function(a,b){var aen=CAT_EN[a]||a;var ben=CAT_EN[b]||b;return aen.localeCompare(ben);});
+       function catSev(cat){var atoms=byCat[cat];var hi=0,me=0;atoms.forEach(function(a){var cri=0,em=0;(a.c||[]).forEach(function(g){var c=CAUSE_INDEX[g];if(!c)return;if(c.hx==='急症')cri++;else if(c.em)em++;});if(cri>=2||/急症/.test(a.n))hi++;else if(cri>=1||em>=3)me++;});if(hi>=3)return 'sev-high';if(hi>=1||me>=3)return 'sev-med';return '';}
+       resEl.innerHTML=sortBar+catOrder.map(function(cat){var enName=CAT_EN[cat]||cat;var sev=catSev(cat);return '<div class="cgrp '+sev+'"><h4 class="cgrp-hd">'+esc(enName)+' <span class="cgrp-zh">'+esc(cat.replace(/^[^\u4e00-\u9fa5]+/,''))+'</span><span style="font-weight:400;color:var(--mut);margin-left:6px;font-size:12px">('+byCat[cat].length+')</span></h4><div class="grid">'+byCat[cat].map(tileHTML).join('')+'</div></div>';}).join('');
      }
    }else{
      var byCC={};CAUSE_LIST.forEach(function(c){var k=c.medCat||'其他';if(!byCC[k])byCC[k]=[];byCC[k].push(c);});
