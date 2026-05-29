@@ -429,9 +429,9 @@ function renderPickerResults(curId){
  var h='';
  if(q){
    var hits=GCLUES.filter(function(o){return o.symId!==curId&&(o.m==='home'||o.m==='both')&&o.t.toLowerCase().indexOf(q)>=0;}).slice(0,40);
-   h+='<div class="clues">'+(hits.length?hits.map(function(o){return '<button class="chip'+(ST.sel[o.key]?' on':'')+'" onclick="APP.clue(\''+o.key+'\')">'+esc(o.t)+'<span class="clueorigin">'+esc(o.sym)+'</span></button>';}).join(''):'<span class="hint">没有匹配的线索</span>')+'</div>';
+   h+='<div class="clues">'+(hits.length?hits.map(function(o){return '<button type="button" class="chip'+(ST.sel[o.key]?' on':'')+'" onclick="APP.clue(\''+o.key+'\')">'+esc(o.t)+'<span class="clueorigin">'+esc(o.sym)+'</span></button>';}).join(''):'<span class="hint">没有匹配的线索</span>')+'</div>';
  }else{
-   h+=DATA.filter(function(s){return s.id!==curId;}).map(function(s){var cs=CLUES_BY_SYM[s.id].filter(function(o){return o.m==='home'||o.m==='both';});if(!cs.length)return '';return '<div class="pgrp"><div class="pgh">'+esc(s.short)+'</div><div class="clues">'+cs.map(function(o){return '<button class="chip'+(ST.sel[o.key]?' on':'')+'" onclick="APP.clue(\''+o.key+'\')">'+esc(o.t)+'</button>';}).join('')+'</div></div>';}).join('');
+   h+=DATA.filter(function(s){return s.id!==curId;}).map(function(s){var cs=CLUES_BY_SYM[s.id].filter(function(o){return o.m==='home'||o.m==='both';});if(!cs.length)return '';return '<div class="pgrp"><div class="pgh">'+esc(s.short)+'</div><div class="clues">'+cs.map(function(o){return '<button type="button" class="chip'+(ST.sel[o.key]?' on':'')+'" onclick="APP.clue(\''+o.key+'\')">'+esc(o.t)+'</button>';}).join('')+'</div></div>';}).join('');
  }
  el.innerHTML=h;
 }
@@ -459,19 +459,19 @@ function renderHomeResults(){
    var nSingleAtoms=ATOMIC_SYMS.filter(function(a){return a.cat.indexOf('⭐组合')!==0;}).length;dimEl.innerHTML='<div class="dim-seg"><div class="seg"><button class="'+(ST.dim==='sym'?'on':'')+'" onclick="APP.setDim(\'sym\')">🐾 按症状 <b>'+nSingleAtoms+'</b></button><button class="'+(ST.dim==='cause'?'on':'')+'" onclick="APP.setDim(\'cause\')">🦠 按疾病反查 <b>'+CAUSE_LIST.length+'</b></button></div></div>';
    if(ST.dim==='sym'){
      var byCat={},catOrder=[];ATOMIC_SYMS.filter(function(a){return a.cat.indexOf('⭐组合')!==0;}).forEach(function(a){if(!byCat[a.cat]){byCat[a.cat]=[];catOrder.push(a.cat);}byCat[a.cat].push(a);});var priCat=['📋 体征','🐈 品种','🥫 误食','🧠 精神'];catOrder.sort(function(a,b){var ai=priCat.indexOf(a);var bi=priCat.indexOf(b);if(ai<0&&bi<0)return 0;if(ai<0)return 1;if(bi<0)return -1;return ai-bi;});
-     resEl.innerHTML=catOrder.map(function(cat){return '<div class="cgrp"><h4>'+esc(cat)+'</h4><div class="grid">'+byCat[cat].map(function(a){var em=a.c&&a.c.some(function(g){var c=CAUSE_INDEX[g];return c&&(c.em||c.hx==='急症');});return '<button class="tile'+(em?' em':'')+'" onclick="APP.openAtomic(\''+a.id+'\')">'+(em?'<span class="em-bar"></span>':'')+'<span class="em">'+a.e+'</span><span class="nm">'+esc(a.n)+'</span></button>';}).join('')+'</div></div>';}).join('');
+     resEl.innerHTML=catOrder.map(function(cat){return '<div class="cgrp"><h4>'+esc(cat)+'</h4><div class="grid">'+byCat[cat].map(function(a){var em=a.c&&a.c.some(function(g){var c=CAUSE_INDEX[g];return c&&(c.em||c.hx==='急症');});return '<button type="button" class="tile'+(em?' em':'')+'" onclick="APP.openAtomic(\''+a.id+'\')">'+(em?'<span class="em-bar"></span>':'')+'<span class="em">'+a.e+'</span><span class="nm">'+esc(a.n)+'</span></button>';}).join('')+'</div></div>';}).join('');
    }else{
      var byCC={};CAUSE_LIST.forEach(function(c){var k=c.medCat||'其他';if(!byCC[k])byCC[k]=[];byCC[k].push(c);});
      var keys=MED_CAT_ORDER.filter(function(k){return byCC[k]&&byCC[k].length;});if(byCC['其他'])keys.push('其他');
-     resEl.innerHTML=keys.map(function(k){var grp=byCC[k];return '<div class="cgrp"><h4>'+esc(k)+'<span style="font-weight:400;color:var(--mut);margin-left:6px">('+grp.length+')</span></h4><div class="cgrid">'+grp.map(function(c){var mc=c.mentions.length;return '<button class="ctile'+(c.em?' em':'')+'" onclick="APP.openCause(\''+c.gid+'\')">'+(c.em?'<span class="em-bar"></span>':'')+'<span class="cnm">'+(c.em?'<span class="em-mark">🚨 </span>':'')+esc(c.name)+'</span><span class="csrc">'+esc(c.homeSymShort)+(mc?' · 在 '+mc+' 个其他症状出现':'')+'</span></button>';}).join('')+'</div></div>';}).join('');
+     resEl.innerHTML=keys.map(function(k){var grp=byCC[k];return '<div class="cgrp"><h4>'+esc(k)+'<span style="font-weight:400;color:var(--mut);margin-left:6px">('+grp.length+')</span></h4><div class="cgrid">'+grp.map(function(c){var mc=c.mentions.length;return '<button type="button" class="ctile'+(c.em?' em':'')+'" onclick="APP.openCause(\''+c.gid+'\')">'+(c.em?'<span class="em-bar"></span>':'')+'<span class="cnm">'+(c.em?'<span class="em-mark">🚨 </span>':'')+esc(c.name)+'</span><span class="csrc">'+esc(c.homeSymShort)+(mc?' · 在 '+mc+' 个其他症状出现':'')+'</span></button>';}).join('')+'</div></div>';}).join('');
    }
  }else{
    dimEl.innerHTML='';
    var atomicHits=ATOMIC_SYMS.filter(function(a){return a.n.toLowerCase().indexOf(q)>=0||a.cat.toLowerCase().indexOf(q)>=0;});
    var causeHits=CAUSE_LIST.filter(function(c){if(c.name.toLowerCase().indexOf(q)>=0)return true;if(c.homeSymShort.toLowerCase().indexOf(q)>=0)return true;if(c.homeSymTitle.toLowerCase().indexOf(q)>=0)return true;if(c.aliases&&c.aliases.length){for(var i=0;i<c.aliases.length;i++)if(c.aliases[i].toLowerCase().indexOf(q)>=0)return true;}return false;});
    var h='';
-   if(atomicHits.length){h+='<h4 class="shd">症状（'+atomicHits.length+'）<span class="shd-tag">查可能疾病</span></h4><div class="grid">'+atomicHits.map(function(a){var em=a.c&&a.c.some(function(g){var c=CAUSE_INDEX[g];return c&&(c.em||c.hx==='急症');});return '<button class="tile'+(em?' em':'')+'" onclick="APP.openAtomic(\''+a.id+'\')">'+(em?'<span class="em-bar"></span>':'')+'<span class="em">'+a.e+'</span><span class="nm">'+esc(a.n)+'</span></button>';}).join('')+'</div>';}
-   if(causeHits.length){h+='<h4 class="shd">疾病（'+causeHits.length+'）<span class="shd-tag">反查可能表现</span></h4><div class="cgrid">'+causeHits.map(function(c){var mc=c.mentions.length;return '<button class="ctile'+(c.em?' em':'')+'" onclick="APP.openCause(\''+c.gid+'\')">'+(c.em?'<span class="em-bar"></span>':'')+'<span class="cnm">'+(c.em?'<span class="em-mark">🚨 </span>':'')+esc(c.name)+'</span><span class="csrc">治疗章节：<b>'+esc(c.homeSymShort)+'</b>'+(mc?' · 在 '+mc+' 个其他症状出现':'')+'</span></button>';}).join('')+'</div>';}
+   if(atomicHits.length){h+='<h4 class="shd">症状（'+atomicHits.length+'）<span class="shd-tag">查可能疾病</span></h4><div class="grid">'+atomicHits.map(function(a){var em=a.c&&a.c.some(function(g){var c=CAUSE_INDEX[g];return c&&(c.em||c.hx==='急症');});return '<button type="button" class="tile'+(em?' em':'')+'" onclick="APP.openAtomic(\''+a.id+'\')">'+(em?'<span class="em-bar"></span>':'')+'<span class="em">'+a.e+'</span><span class="nm">'+esc(a.n)+'</span></button>';}).join('')+'</div>';}
+   if(causeHits.length){h+='<h4 class="shd">疾病（'+causeHits.length+'）<span class="shd-tag">反查可能表现</span></h4><div class="cgrid">'+causeHits.map(function(c){var mc=c.mentions.length;return '<button type="button" class="ctile'+(c.em?' em':'')+'" onclick="APP.openCause(\''+c.gid+'\')">'+(c.em?'<span class="em-bar"></span>':'')+'<span class="cnm">'+(c.em?'<span class="em-mark">🚨 </span>':'')+esc(c.name)+'</span><span class="csrc">治疗章节：<b>'+esc(c.homeSymShort)+'</b>'+(mc?' · 在 '+mc+' 个其他症状出现':'')+'</span></button>';}).join('')+'</div>';}
    if(!atomicHits.length&&!causeHits.length){h+='<div class="placeholder">没有匹配的结果。试试「呕吐」「打喷嚏」「猫瘟」「FCV」「胰腺炎」「甲亢」等关键词。</div>';}
    resEl.innerHTML=h;
  }
@@ -538,7 +538,7 @@ function renderAtomicSym(){
  html+='<div class="cd-hd"><h2>'+a.e+' '+esc(a.n)+(totalSel>1?'<span style="font-size:14px;color:var(--mut);margin-left:8px;font-weight:400">+'+(totalSel-1)+' 个其他症状</span>':'')+'</h2></div>';
  // Selected atoms chips
  html+='<div class="step"><span class="n">1</span><span class="t">已勾选的症状</span><span class="sub">'+totalSel+' 个 · 点击 ✕ 取消</span></div>';
- html+='<div class="clues">'+selIds.map(function(aid){var at=ATOMIC_BY_ID[aid];if(!at)return '';return '<button class="chip on" onclick="APP.toggleAtomSel(\''+aid+'\')">'+at.e+' '+esc(at.n)+' <span class="vt">✕</span></button>';}).join('')+'<button class="chip add" onclick="APP.toggleSymPicker()">'+(ST.symPicker?'× 收起':'＋ 添加更多症状')+'</button></div>';
+ html+='<div class="clues">'+selIds.map(function(aid){var at=ATOMIC_BY_ID[aid];if(!at)return '';return '<button type="button" class="chip on" onclick="APP.toggleAtomSel(\''+aid+'\')">'+at.e+' '+esc(at.n)+' <span class="vt">✕</span></button>';}).join('')+'<button type="button" class="chip add" onclick="APP.toggleSymPicker()">'+(ST.symPicker?'× 收起':'＋ 添加更多症状')+'</button></div>';
  if(ST.symPicker)html+=renderSymPicker();
  var lockedCo=null;if(ST.lockedCombo){for(var li=0;li<COMBOS.length;li++)if(COMBOS[li].id===ST.lockedCombo){lockedCo=COMBOS[li];break;}}
  var suggestCombos;
@@ -566,7 +566,7 @@ function renderSymPickerResults(){
  var byCat={},catOrder=[];
  ATOMIC_SYMS.forEach(function(a){if(q&&a.n.toLowerCase().indexOf(q)<0&&a.cat.toLowerCase().indexOf(q)<0)return;if(!byCat[a.cat]){byCat[a.cat]=[];catOrder.push(a.cat);}byCat[a.cat].push(a);});
  if(!catOrder.length){el.innerHTML='<span class="hint">没有匹配的症状</span>';return;}
- el.innerHTML=catOrder.map(function(cat){var items=byCat[cat];return '<div class="pgrp"><div class="pgh">'+esc(cat)+'</div><div class="clues">'+items.map(function(a){return '<button class="chip'+(ST.symSel[a.id]?' on':'')+'" onclick="APP.toggleAtomSel(\''+a.id+'\')">'+a.e+' '+esc(a.n)+'</button>';}).join('')+'</div></div>';}).join('');
+ el.innerHTML=catOrder.map(function(cat){var items=byCat[cat];return '<div class="pgrp"><div class="pgh">'+esc(cat)+'</div><div class="clues">'+items.map(function(a){return '<button type="button" class="chip'+(ST.symSel[a.id]?' on':'')+'" onclick="APP.toggleAtomSel(\''+a.id+'\')">'+a.e+' '+esc(a.n)+'</button>';}).join('')+'</div></div>';}).join('');
 }
 function renderSymCauses(){
  var s=SYM_BY_ID[ST.sv];if(!s){go('home');return;}
@@ -584,12 +584,12 @@ function renderSymCauses(){
  html+='<div class="cd-hd"><h2>'+s.icon+' '+esc(s.title)+'</h2><div class="cd-meta">此症状可能由以下任何一种疾病引起 · 点击疾病查看完整方案</div></div>';
  if(s.emerg)html+='<div class="emerg">🚨 '+esc(s.emerg)+'</div>';
  // Direct causes section
- if(directCauses.length){html+='<div class="cd-sec"><h3 style="color:var(--g1)">📋 本章节直接疾病 ('+directCauses.length+')</h3><div class="cgrid">'+directCauses.map(function(g){var c=CAUSE_INDEX[g];return '<button class="ctile'+(c.em?' em':'')+'" onclick="APP.openCause(\''+g+'\')">'+(c.em?'<span class="em-bar"></span>':'')+'<span class="cnm">'+(c.em?'<span class="em-mark">🚨 </span>':'')+esc(c.name)+'</span><span class="csrc">就医确诊 '+esc(c.dx)+(c.hx&&c.hx!=='急症'?' · 居家研判 '+esc(c.hx):'')+'</span></button>';}).join('')+'</div></div>';}
+ if(directCauses.length){html+='<div class="cd-sec"><h3 style="color:var(--g1)">📋 本章节直接疾病 ('+directCauses.length+')</h3><div class="cgrid">'+directCauses.map(function(g){var c=CAUSE_INDEX[g];return '<button type="button" class="ctile'+(c.em?' em':'')+'" onclick="APP.openCause(\''+g+'\')">'+(c.em?'<span class="em-bar"></span>':'')+'<span class="cnm">'+(c.em?'<span class="em-mark">🚨 </span>':'')+esc(c.name)+'</span><span class="csrc">就医确诊 '+esc(c.dx)+(c.hx&&c.hx!=='急症'?' · 居家研判 '+esc(c.hx):'')+'</span></button>';}).join('')+'</div></div>';}
  // Sibling-chapter causes (same disease in other chapters)
  var sibList=Object.keys(sibSet);
- if(sibList.length){html+='<div class="cd-sec"><h3 style="color:var(--g2)">🔁 同病在其他章节的治疗入口 ('+sibList.length+')</h3><div class="cgrid">'+sibList.map(function(g){var c=CAUSE_INDEX[g];return '<button class="ctile'+(c.em?' em':'')+'" onclick="APP.openCause(\''+g+'\')">'+(c.em?'<span class="em-bar"></span>':'')+'<span class="cnm">'+(c.em?'<span class="em-mark">🚨 </span>':'')+esc(c.name)+'</span><span class="csrc">主章节：<b>'+esc(c.homeSymShort)+'</b></span></button>';}).join('')+'</div></div>';}
+ if(sibList.length){html+='<div class="cd-sec"><h3 style="color:var(--g2)">🔁 同病在其他章节的治疗入口 ('+sibList.length+')</h3><div class="cgrid">'+sibList.map(function(g){var c=CAUSE_INDEX[g];return '<button type="button" class="ctile'+(c.em?' em':'')+'" onclick="APP.openCause(\''+g+'\')">'+(c.em?'<span class="em-bar"></span>':'')+'<span class="cnm">'+(c.em?'<span class="em-mark">🚨 </span>':'')+esc(c.name)+'</span><span class="csrc">主章节：<b>'+esc(c.homeSymShort)+'</b></span></button>';}).join('')+'</div></div>';}
  // Cross-system mention causes (triggered by clues in THIS chapter)
- if(crossCauses.length){html+='<div class="cd-sec"><h3 style="color:var(--mut)">↗ 跨系统疾病(经特征触发；'+crossCauses.length+')</h3><div class="cgrid">'+crossCauses.map(function(g){var c=CAUSE_INDEX[g];return '<button class="ctile'+(c.em?' em':'')+'" onclick="APP.openCause(\''+g+'\')">'+(c.em?'<span class="em-bar"></span>':'')+'<span class="cnm">'+(c.em?'<span class="em-mark">🚨 </span>':'')+esc(c.name)+'</span><span class="csrc">主章节：<b>'+esc(c.homeSymShort)+'</b></span></button>';}).join('')+'</div></div>';}
+ if(crossCauses.length){html+='<div class="cd-sec"><h3 style="color:var(--mut)">↗ 跨系统疾病(经特征触发；'+crossCauses.length+')</h3><div class="cgrid">'+crossCauses.map(function(g){var c=CAUSE_INDEX[g];return '<button type="button" class="ctile'+(c.em?' em':'')+'" onclick="APP.openCause(\''+g+'\')">'+(c.em?'<span class="em-bar"></span>':'')+'<span class="cnm">'+(c.em?'<span class="em-mark">🚨 </span>':'')+esc(c.name)+'</span><span class="csrc">主章节：<b>'+esc(c.homeSymShort)+'</b></span></button>';}).join('')+'</div></div>';}
  html+='<div class="cd-sec" style="margin-top:24px"><button class="cd-tx" onclick="APP.startDiag(\''+s.id+'\')">→ 用线索筛选缩小范围（进入诊断流程）</button></div>';
  var host=document.getElementById('view');host.className='fade';host.innerHTML=html;
 }
@@ -615,11 +615,11 @@ function renderCauseDetail(){
  var matchingCombos=(typeof COMBOS!=='undefined'?COMBOS:[]).filter(function(co){return co.target===c.gid;});
  if(matchingCombos.length){html+='<div class="cd-sec"><h3>⭐ 高发组合诊断 (强指本病的原子集)</h3><div class="combo-list">'+matchingCombos.map(function(co){return '<div class="combo-card"><div class="combo-hd"><span class="combo-tag">'+esc(co.tag||'')+'</span><span class="combo-nm">'+esc(co.name)+'</span></div>'+(co.hint?'<div class="combo-hint">'+esc(co.hint)+'</div>':'')+'<div class="combo-atoms-static">'+co.atoms.map(function(aid){var at=ATOMIC_BY_ID[aid];if(!at)return '';return '<span class="combo-chip-static">'+at.e+' '+esc(at.n)+'</span>';}).join('')+'</div></div>';}).join('')+'</div></div>';}
  if(atomicList.length){html+='<div class="cd-sec"><h3>🦴 此病可能表现为以下单原子症状 ('+atomicList.length+')</h3><div class="cd-syms">';
- html+=atomicList.map(function(a){var em=a.c&&a.c.some(function(g){var cc=CAUSE_INDEX[g];return cc&&(cc.em||cc.hx==='急症');});return '<button class="csym'+(em?' em-csym':'')+'" onclick="APP.openAtomic(\''+a.id+'\')"><span class="em">'+a.e+'</span><span class="body"><div class="nm">'+(em?'🚨 ':'')+esc(a.n)+'</div><div class="tag">点击看此症状所有可能疾病</div></span></button>';}).join('');
+ html+=atomicList.map(function(a){var em=a.c&&a.c.some(function(g){var cc=CAUSE_INDEX[g];return cc&&(cc.em||cc.hx==='急症');});return '<button type="button" class="csym'+(em?' em-csym':'')+'" onclick="APP.openAtomic(\''+a.id+'\')"><span class="em">'+a.e+'</span><span class="body"><div class="nm">'+(em?'🚨 ':'')+esc(a.n)+'</div><div class="tag">点击看此症状所有可能疾病</div></span></button>';}).join('');
  html+='</div></div>';}
  // Sibling-disease entries in other chapters
  var sibList2=Object.keys(sibSet);
- if(sibList2.length){html+='<div class="cd-sec"><h3 style="font-size:14px;color:var(--mut)">🔁 同病在其他章节的治疗入口</h3><div class="cd-syms">'+sibList2.map(function(sid){var info=sibSet[sid];return '<button class="csym sib" onclick="APP.openCause(\''+info.gid+'\')"><span class="em">'+SYM_BY_ID[sid].icon+'</span><span class="body"><div class="nm">'+esc(SYM_BY_ID[sid].short)+'</div><div class="tag">用药不同 → 切换</div></span></button>';}).join('')+'</div></div>';}
+ if(sibList2.length){html+='<div class="cd-sec"><h3 style="font-size:14px;color:var(--mut)">🔁 同病在其他章节的治疗入口</h3><div class="cd-syms">'+sibList2.map(function(sid){var info=sibSet[sid];return '<button type="button" class="csym sib" onclick="APP.openCause(\''+info.gid+'\')"><span class="em">'+SYM_BY_ID[sid].icon+'</span><span class="body"><div class="nm">'+esc(SYM_BY_ID[sid].short)+'</div><div class="tag">用药不同 → 切换</div></span></button>';}).join('')+'</div></div>';}
  var rel=c.mentions.filter(function(m){return m.clueText;});
  if(rel.length){html+='<div class="cd-sec"><h3 style="font-size:13.5px;color:var(--mut);margin-bottom:6px">触发本疾病的跨系统特征</h3>'+rel.map(function(m){return '<div class="cd-clue">在「'+esc(m.symShort)+'」中勾选 <b>'+esc(m.clueText)+'</b></div>';}).join('')+'</div>';}
  html+='<div class="cd-sec"><h3>💊 用药方案<span style="font-size:11.5px;font-weight:500;color:var(--mut);margin-left:8px">(本章节方案)</span></h3>';
@@ -645,10 +645,10 @@ function renderDetail(){
  html+='<div class="step"><span class="n">'+(st++)+'</span><span class="t">猫咪是否还有其他症状？</span><span class="sub'+capCls+'">已选 '+selCount+' / '+MAX_CLUES+' · 勾选你观察到的</span></div>';
  if(ST.flashMsg)html+='<div class="flash">'+esc(ST.flashMsg)+'</div>';
  var obsClues=CLUES_BY_SYM[s.id].filter(function(o){return o.m==='home'||o.m==='both';});
- html+='<div class="clues">'+obsClues.map(function(o){var lk=isLocked(o);return '<button class="chip'+(ST.sel[o.key]?' on':'')+(lk?' locked':'')+'" onclick="APP.clue(\''+o.key+'\')">'+esc(o.t)+'</button>';}).join('')+'<button class="chip add" onclick="APP.togglePicker()">'+(ST.picker?'× 收起':'＋ 其他症状的线索')+'</button></div>';
+ html+='<div class="clues">'+obsClues.map(function(o){var lk=isLocked(o);return '<button type="button" class="chip'+(ST.sel[o.key]?' on':'')+(lk?' locked':'')+'" onclick="APP.clue(\''+o.key+'\')">'+esc(o.t)+'</button>';}).join('')+'<button type="button" class="chip add" onclick="APP.togglePicker()">'+(ST.picker?'× 收起':'＋ 其他症状的线索')+'</button></div>';
  if(ST.picker)html+=renderPicker(s);
  var added=selKeys().filter(function(k){return GBYKEY[k]&&GBYKEY[k].symId!==s.id;});
- if(added.length)html+='<div class="added"><span class="lbl">已添加：</span>'+added.map(function(k){var o=GBYKEY[k];return '<button class="chip on" onclick="APP.clue(\''+k+'\')">'+esc(o.t)+'<span class="clueorigin">'+esc(o.sym)+'</span> ✕</button>';}).join('')+'</div>';
+ if(added.length)html+='<div class="added"><span class="lbl">已添加：</span>'+added.map(function(k){var o=GBYKEY[k];return '<button type="button" class="chip on" onclick="APP.clue(\''+k+'\')">'+esc(o.t)+'<span class="clueorigin">'+esc(o.sym)+'</span> ✕</button>';}).join('')+'</div>';
  html+='<div class="hint">一个线索可指向多个疾病；可跨症状自由组合。</div>';
  if(ST.mode==='vet'){
    // Step 3: 推荐做的检查
@@ -658,7 +658,7 @@ function renderDetail(){
    var vetClues=CLUES_BY_SYM[s.id].filter(function(o){return o.m==='vet';});
    if(vetClues.length){
      html+='<div class="step"><span class="n">'+(st++)+'</span><span class="t">检查结果指标</span><span class="sub">把报告里出现的指标勾上</span></div>';
-     html+='<div class="clues">'+vetClues.map(function(o){var lk=isLocked(o);return '<button class="chip'+(ST.sel[o.key]?' on':'')+(lk?' locked':'')+'" onclick="APP.clue(\''+o.key+'\')">'+esc(o.t)+'</button>';}).join('')+'</div>';
+     html+='<div class="clues">'+vetClues.map(function(o){var lk=isLocked(o);return '<button type="button" class="chip'+(ST.sel[o.key]?' on':'')+(lk?' locked':'')+'" onclick="APP.clue(\''+o.key+'\')">'+esc(o.t)+'</button>';}).join('')+'</div>';
    }
  }
  var anySel=selKeys().some(function(k){var o=GBYKEY[k];return o&&(o.m===ST.mode||o.m==='both');});
