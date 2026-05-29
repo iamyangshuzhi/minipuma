@@ -670,7 +670,7 @@ function renderDetail(){
    html+='<div class="causes">'+list.map(function(o,ri){
      var g=o.g,gc=GCAUSES[g];var pct=Math.round(o.sc*100);var emg=(gc.em||gc.hx==='急症');
      var op=ST.open===g;
-     var h='<div class="cz'+(op?' open':'')+'"><div class="head" onclick="APP.cause(\''+g+'\')">';
+     var h='<div class="cz'+(op?' open':'')+'"><div class="head" onclick="APP.openCause(\''+g+'\')" style="cursor:pointer">';
      h+='<span class="rank">'+(ri+1)+'</span><div class="nmwrap"><div class="nm">'+(emg?'<span class="em-tag">🚨</span>':'')+esc(gc.name)+'<span class="systag">'+esc(gc.sym)+'</span></div><div class="bar"><i style="width:'+pct+'%"></i></div></div>';
      h+='<span class="ptag">可能性 '+pct+'%</span><span class="chev">›</span></div>';
      if(op){
