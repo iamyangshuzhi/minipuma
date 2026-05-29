@@ -701,4 +701,6 @@ function renderStatic(){
  document.getElementById('static').innerHTML=h;
 }
 if(typeof window!=='undefined'){window.addEventListener('hashchange',function(){if(location.hash==='#admin'){ST.authView='admin';ST.adminOk=!!getAdminTok();ST.authMsg='';if(ST.adminOk)loadAdminCodes().then(render);else render();}else{ST.authView=null;render();}});}
+// Defensive event delegation: catch clicks on any element whose inline onclick references APP.openCause/openAtomic but failed to fire (e.g., CSP/runtime issue). Use bubbling so inline handler still runs first; ST.cv guard prevents double-render.
+if(typeof window!=='undefined'){document.addEventListener('click',function(e){var t=e.target;var hops=0;while(t&&t!==document.body&&hops<8){hops++;var oc=t.getAttribute&&t.getAttribute('onclick');if(oc){var m=oc.match(/APP\.openCause\(['"]([^'"]+)['"]\)/);if(m){if(ST.cv===m[1])return;try{APP.openCause(m[1]);}catch(err){console.error('openCause fallback err',err);}return;}var m2=oc.match(/APP\.openAtomic\(['"]([^'"]+)['"]\)/);if(m2){if(ST.asv===m2[1])return;try{APP.openAtomic(m2[1]);}catch(err){console.error('openAtomic fallback err',err);}return;}}t=t.parentNode;}},false);}
 initAuth();if(typeof setInterval!=='undefined'){setInterval(checkSess,30000);}</script></body></html>
