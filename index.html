@@ -551,7 +551,7 @@ function renderAtomicSym(){
  else{html+='<div class="step"><span class="n">2</span><span class="t">可能的疾病</span><span class="sub">'+ranked.length+' 种 · 按覆盖症状数排序'+(firedCombos.length?' · ⭐'+firedCombos.length+' 个组合命中(已加分)':'')+'</span></div>';
  if(!ranked.length){html+='<div class="placeholder">勾选症状后显示可能疾病。</div>';}
  else{html+='<div class="causes">'+ranked.map(function(o,ri){var c=CAUSE_INDEX[o.g];var pct=Math.round(o.sc/totalSel*100);var emg=(c.em||c.hx==='急症');return '<div class="cz" onclick="APP.openCause(\''+o.g+'\')" style="cursor:pointer"><div class="head"><span class="rank">'+(ri+1)+'</span><div class="nmwrap"><div class="nm">'+(emg?'<span class="em-tag">🚨</span>':'')+esc(c.name)+'<span class="systag">'+esc(c.medCat||c.homeSymShort)+'</span></div><div class="bar"><i style="width:'+pct+'%"></i></div></div><span class="ptag">覆盖 '+o.sc+'/'+totalSel+'</span><span class="chev">›</span></div></div>';}).join('')+'</div>';}}
- var host=document.getElementById('view');host.className='fade';host.innerHTML=html;
+ var host=document.getElementById('view');host.className='fade';host.innerHTML=html;Array.prototype.slice.call(host.querySelectorAll('[onclick]')).forEach(function(el){var oc=el.getAttribute('onclick');var m=oc.match(/APP\.openCause\(['"]([^'"]+)['"]\)/);if(m){var gid=m[1];el.addEventListener('click',function(ev){ev.stopPropagation();APP.openCause(gid);},{capture:false});}var m2=oc.match(/APP\.openAtomic\(['"]([^'"]+)['"]\)/);if(m2){var aid=m2[1];el.addEventListener('click',function(ev){ev.stopPropagation();APP.openAtomic(aid);},{capture:false});}});
  var pq=document.getElementById('symPQ');
  if(pq){pq.addEventListener('compositionstart',function(){window._ime=1;});pq.addEventListener('compositionend',function(){window._ime=0;ST.symPQ=this.value;renderSymPickerResults();});pq.addEventListener('input',function(){if(!window._ime){ST.symPQ=this.value;renderSymPickerResults();}});renderSymPickerResults();}
 }
@@ -591,7 +591,7 @@ function renderSymCauses(){
  // Cross-system mention causes (triggered by clues in THIS chapter)
  if(crossCauses.length){html+='<div class="cd-sec"><h3 style="color:var(--mut)">↗ 跨系统疾病(经特征触发；'+crossCauses.length+')</h3><div class="cgrid">'+crossCauses.map(function(g){var c=CAUSE_INDEX[g];return '<button type="button" class="ctile'+(c.em?' em':'')+'" onclick="APP.openCause(\''+g+'\')">'+(c.em?'<span class="em-bar"></span>':'')+'<span class="cnm">'+(c.em?'<span class="em-mark">🚨 </span>':'')+esc(c.name)+'</span><span class="csrc">主章节：<b>'+esc(c.homeSymShort)+'</b></span></button>';}).join('')+'</div></div>';}
  html+='<div class="cd-sec" style="margin-top:24px"><button class="cd-tx" onclick="APP.startDiag(\''+s.id+'\')">→ 用线索筛选缩小范围（进入诊断流程）</button></div>';
- var host=document.getElementById('view');host.className='fade';host.innerHTML=html;
+ var host=document.getElementById('view');host.className='fade';host.innerHTML=html;Array.prototype.slice.call(host.querySelectorAll('[onclick]')).forEach(function(el){var oc=el.getAttribute('onclick');var m=oc.match(/APP\.openCause\(['"]([^'"]+)['"]\)/);if(m){var gid=m[1];el.addEventListener('click',function(ev){ev.stopPropagation();APP.openCause(gid);},{capture:false});}var m2=oc.match(/APP\.openAtomic\(['"]([^'"]+)['"]\)/);if(m2){var aid=m2[1];el.addEventListener('click',function(ev){ev.stopPropagation();APP.openAtomic(aid);},{capture:false});}});
 }
 function renderCauseDetail(){
  var c=CAUSE_INDEX[ST.cv];if(!c){go('home');return;}
@@ -628,7 +628,7 @@ function renderCauseDetail(){
  if(Object.keys(sibSet).length){html+='<div style="margin-top:14px;font-size:12.5px;color:var(--mut)">本病在其他章节也有用药方案（部位/严重度不同药法不同）：'+Object.keys(sibSet).map(function(sid){var g=sibSet[sid].gid;var nm=CAUSE_INDEX[g]?CAUSE_INDEX[g].homeSymShort:sid;return '<span class="glink" style="font-size:12.5px;margin-right:10px" onclick="APP.openCause(\''+g+'\')">→ '+esc(nm)+'</span>';}).join('')+'</div>';}
  if(ann.care&&ann.care.length)html+='<div class="care" style="padding:16px 2px 0"><div class="ct">🩺 护理与注意事项</div><ul>'+ann.care.map(function(x){return '<li>'+esc(x)+'</li>';}).join('')+'</ul></div>';
  html+='</div>';
- var host=document.getElementById('view');host.className='fade';host.innerHTML=html;
+ var host=document.getElementById('view');host.className='fade';host.innerHTML=html;Array.prototype.slice.call(host.querySelectorAll('[onclick]')).forEach(function(el){var oc=el.getAttribute('onclick');var m=oc.match(/APP\.openCause\(['"]([^'"]+)['"]\)/);if(m){var gid=m[1];el.addEventListener('click',function(ev){ev.stopPropagation();APP.openCause(gid);},{capture:false});}var m2=oc.match(/APP\.openAtomic\(['"]([^'"]+)['"]\)/);if(m2){var aid=m2[1];el.addEventListener('click',function(ev){ev.stopPropagation();APP.openAtomic(aid);},{capture:false});}});
 }
 function renderDetail(){
  var s=DATA[ST.i];
@@ -686,7 +686,7 @@ function renderDetail(){
      h+='</div>';return h;
    }).join('')+'</div>';
  }
- var host=document.getElementById('view');host.className='fade';host.innerHTML=html;
+ var host=document.getElementById('view');host.className='fade';host.innerHTML=html;Array.prototype.slice.call(host.querySelectorAll('[onclick]')).forEach(function(el){var oc=el.getAttribute('onclick');var m=oc.match(/APP\.openCause\(['"]([^'"]+)['"]\)/);if(m){var gid=m[1];el.addEventListener('click',function(ev){ev.stopPropagation();APP.openCause(gid);},{capture:false});}var m2=oc.match(/APP\.openAtomic\(['"]([^'"]+)['"]\)/);if(m2){var aid=m2[1];el.addEventListener('click',function(ev){ev.stopPropagation();APP.openAtomic(aid);},{capture:false});}});
  var pq=document.getElementById('pq2');
  if(pq){
    pq.addEventListener('compositionstart',function(){window._ime=1;});
