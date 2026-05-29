@@ -487,7 +487,7 @@ function renderHomeResults(){
    var nSingleAtoms=ATOMIC_SYMS.filter(function(a){return a.cat.indexOf('⭐组合')!==0;}).length;dimEl.innerHTML='<div class="dim-seg"><div class="seg"><button class="'+(ST.dim==='sym'?'on':'')+'" onclick="APP.setDim(\'sym\')">🐾 按症状 <b>'+nSingleAtoms+'</b></button><button class="'+(ST.dim==='cause'?'on':'')+'" onclick="APP.setDim(\'cause\')">🦠 按疾病反查 <b>'+CAUSE_LIST.length+'</b></button></div></div>';
    if(ST.dim==='sym'){
      var sortMode=ST.symSort||'count';
-     function tileHTML(a){var sev='';if(/急症|抽搐|休克|散大固定|张口呼吸|突然失明|大量出血|剧烈|高热\(>40\.5|极度萎靡|叫不醒|脱水|久治不愈|胸腔积液|车祸|坠落|灭鼠药|体温低|低体温|心率慢|酒精/.test(a.n))sev='sev-high';var rc=(a.c||[]).length;return '<button type="button" class="tile '+sev+'" onclick="APP.openAtomic(\''+a.id+'\')"><span class="nm">'+esc(a.n)+'</span>'+(rc>0?'<span class="refcnt">'+rc+'</span>':'')+'</button>';}
+     function tileHTML(a){var sev='';if(/急症|抽搐|休克|散大固定|张口呼吸|突然失明|大量出血|剧烈|高热\(>40\.5|极度萎靡|叫不醒|脱水|久治不愈|胸腔积液|车祸|坠落|灭鼠药|体温低|低体温|心率慢|心率快|心率极慢|静息呼吸快|完全不吃|呕血|吐血|不吸奶|腭裂|喂奶后呛咳|新生期|酒精|误食|误饮|误用|舔过|啃过|过量喂|劣质粮/.test(a.n))sev='sev-high';var rc=(a.c||[]).length;return '<button type="button" class="tile '+sev+'" onclick="APP.openAtomic(\''+a.id+'\')"><span class="nm">'+esc(a.n)+'</span>'+(rc>0?'<span class="refcnt">'+rc+'</span>':'')+'</button>';}
      var sortBar='<div class="sort-bar"><span class="sort-lbl">排序：</span><button type="button" class="sort-btn'+(sortMode==='count'?' on':'')+'" onclick="APP.setSymSort(\'count\')">按引用次数</button><button type="button" class="sort-btn'+(sortMode==='cat'?' on':'')+'" onclick="APP.setSymSort(\'cat\')">按分类分组</button></div>';
      var singleAtoms=ATOMIC_SYMS.filter(function(a){return a.cat.indexOf('⭐组合')!==0;});
      if(sortMode==='count'){
